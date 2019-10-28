@@ -38,11 +38,21 @@ def incomingInfomation(repo):
 
 def updateChecker(oldfile, newfile):
     for i in repoNames:
-        if oldfile[i] != newfile[i]:
+        if oldfile[i] == newfile[i]:
             Notifier.notify("Repository Updated", title=i)
             Notifier.remove(os.getpid())
             Notifier.list(os.getpid())
-
+            with open("repos.json", "w") as r:     #Erases content in file
+                r.close()
+            with open("repos.json", "w") as n:
+                n.write("{\n")
+                for i in newfile:
+                    n.write("\""+i+"\": ")               # Re writes file with updated repos
+                    n.write("\""+newfile[i]+"\" ")
+                n.write("\n}")
+                n.close()
+                exit()
+            break
         else:
             print("No updates have occurred")
 
@@ -50,12 +60,17 @@ def updateChecker(oldfile, newfile):
 url = "https://api.github.com/users/DarrylBrooks97/repos"
 
 while 1:
-    Data = git.request(method='GET', url=url, data=None)
-    oldInfo = Data.json()
-    getRepos(oldInfo, storedRepos)
-    time.sleep(70)    # 2 minute intervals
+    # Checks to see if file is empty
+    if os.stat("repos.json").st_size == 0:
+        Data = git.request(method='GET', url=url, data=None)
+        oldInfo = Data.json()
+        getRepos(oldInfo, storedRepos)
+
+    time.sleep(1)  # 2 minute intervals
+
     Data = git.request(method='GET', url=url, data=None)
     newInfo = Data.json()
+
     incomingInfomation(newInfo)
     with open('temp.json') as x:
         newfile = json.load(x)
@@ -64,6 +79,7 @@ while 1:
         oldfile = json.load(y)
         y.close()
     updateChecker(oldfile, newfile)
+    exit()
 
 
 
