@@ -59,27 +59,27 @@ def updateChecker(oldfile, newfile):
 
 url = "https://api.github.com/users/DarrylBrooks97/repos"
 
-while 1:
-    # Checks to see if file is empty
-    if os.stat("repos.json").st_size == 0:
-        Data = git.request(method='GET', url=url, data=None)
-        oldInfo = Data.json()
-        getRepos(oldInfo, storedRepos)
 
-    time.sleep(1)  # 2 minute intervals
-
+# Checks to see if file is empty
+if os.stat("repos.json").st_size == 0:
     Data = git.request(method='GET', url=url, data=None)
-    newInfo = Data.json()
+    oldInfo = Data.json()
+    getRepos(oldInfo, storedRepos)
 
-    incomingInfomation(newInfo)
-    with open('temp.json') as x:
-        newfile = json.load(x)
-        x.close()
-    with open('repos.json') as y:
-        oldfile = json.load(y)
-        y.close()
-    updateChecker(oldfile, newfile)
-    exit()
+time.sleep(10)  # 2 minute intervals
+
+Data = git.request(method='GET', url=url, data=None)
+newInfo = Data.json()
+
+incomingInfomation(newInfo)
+with open('temp.json') as x:
+    newfile = json.load(x)
+    x.close()
+with open('repos.json') as y:
+    oldfile = json.load(y)
+    y.close()
+updateChecker(oldfile, newfile)
+exit()
 
 
 
