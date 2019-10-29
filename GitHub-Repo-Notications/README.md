@@ -5,4 +5,4 @@
 4. pync module has been installed
 
 ## Configuring authorization within script
-1. 
+1. Add Github user Auth-Token to the __init__.py file
